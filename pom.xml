@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.gulf</groupId>
+  <artifactId>asyc-gateway</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+
+  <name>asyc-gateway</name>
+  <!-- FIXME change it to the project's website -->
+  <url>http://www.example.com</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
+    <javassist_version>3.18.2-GA</javassist_version>
+    <io_netty>4.0.24.Final</io_netty>
+  </properties>
+
+  <modules>
+    <module>asyc-gateway-api</module>
+    <module>asyc-gateway-server</module>
+    <module>asyc-gateway-register</module>
+    <module>asyc-gateway-ha</module>
+  </modules>
+
+  <dependencyManagement>
+    <dependencies>
+
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.11</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-all</artifactId>
+        <version>${io_netty}</version>
+        <exclusions>
+          <exclusion>
+            <artifactId>org.apache.logging.log4j</artifactId>
+            <groupId>log4j</groupId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.javassist</groupId>
+        <artifactId>javassist</artifactId>
+        <version>${javassist_version}</version>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
+</project>
