@@ -9,9 +9,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>asyc-gateway-register</artifactId>
+    <artifactId>asyc-gateway-remoting</artifactId>
 
-    <name>asyc-gateway-register</name>
+    <name>asyc-gateway-remoting</name>
     <!-- FIXME change it to the project's website -->
     <url>http://www.example.com</url>
 
@@ -22,14 +22,15 @@
     </properties>
 
     <modules>
-        <module>asyc-gateway-register-zookeeper</module>
-        <module>asyc-gateway-register-consul</module>
+        <module>asyc-gateway-remoting-zookeeper</module>
     </modules>
 
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

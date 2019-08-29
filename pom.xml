@@ -6,6 +6,7 @@
 
   <groupId>com.gulf</groupId>
   <artifactId>asyc-gateway</artifactId>
+  <packaging>pom</packaging>
   <version>1.0.0-SNAPSHOT</version>
 
   <name>asyc-gateway</name>
@@ -23,8 +24,9 @@
   <modules>
     <module>asyc-gateway-api</module>
     <module>asyc-gateway-server</module>
-    <module>asyc-gateway-register</module>
     <module>asyc-gateway-ha</module>
+    <module>asyc-gateway-remoting</module>
+    <module>asyc-gateway-register</module>
   </modules>
 
   <dependencyManagement>
