@@ -5,11 +5,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.gulf</groupId>
-  <artifactId>asyc-gateway</artifactId>
+  <artifactId>async-gateway</artifactId>
   <packaging>pom</packaging>
   <version>1.0.0-SNAPSHOT</version>
 
-  <name>asyc-gateway</name>
+  <name>async-gateway</name>
   <!-- FIXME change it to the project's website -->
   <url>http://www.example.com</url>
 
@@ -18,31 +18,32 @@
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
     <javassist_version>3.18.2-GA</javassist_version>
-    <io_netty>4.0.24.Final</io_netty>
+    <io_netty_version>4.1.25.Final</io_netty_version>
+    <slf4j_version>1.7.25</slf4j_version>
+    <log4j_version>2.9.1</log4j_version>
+    <guava_version>21.0</guava_version>
+    <lombok_version>1.16.4</lombok_version>
+    <common-lang3_version>3.7</common-lang3_version>
+    <fastjson_version>1.2.47</fastjson_version>
   </properties>
 
   <modules>
-    <module>asyc-gateway-api</module>
-    <module>asyc-gateway-server</module>
-    <module>asyc-gateway-ha</module>
-    <module>asyc-gateway-remoting</module>
-    <module>asyc-gateway-register</module>
+    <module>async-gateway-api</module>
+    <module>async-gateway-server</module>
+    <module>async-gateway-ha</module>
+    <module>async-gateway-remoting</module>
+    <module>async-gateway-register</module>
+    <module>async-gateway-common</module>
+    <module>async-gateway-pipeline</module>
+    <module>async-gateway-store</module>
   </modules>
 
   <dependencyManagement>
     <dependencies>
-
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>4.11</version>
-        <scope>test</scope>
-      </dependency>
-
       <dependency>
         <groupId>io.netty</groupId>
         <artifactId>netty-all</artifactId>
-        <version>${io_netty}</version>
+        <version>${io_netty_version}</version>
         <exclusions>
           <exclusion>
             <artifactId>org.apache.logging.log4j</artifactId>
@@ -57,6 +58,50 @@
         <version>${javassist_version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4j_version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-api</artifactId>
+        <version>${log4j_version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>${lombok_version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>${common-lang3_version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>fastjson</artifactId>
+        <version>${fastjson_version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
+
+    <dependencies>
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>${guava_version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.11</version>
+        <scope>test</scope>
+      </dependency>
+
+    </dependencies>
 </project>
