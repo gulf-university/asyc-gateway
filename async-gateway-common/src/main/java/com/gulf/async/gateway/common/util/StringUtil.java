@@ -1,8 +1,10 @@
 package com.gulf.async.gateway.common.util;
 
 import com.gulf.async.gateway.common.exception.GatewayException;
+import com.gulf.async.gateway.common.serialize.dubbo.io.UnsafeStringWriter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -609,4 +611,57 @@ public final class StringUtil {
         return c == SPACE || c == TAB;
     }
 
+    /**
+     *
+     * @param e
+     * @return string
+     */
+    public static String toString(Throwable e) {
+        UnsafeStringWriter w = new UnsafeStringWriter();
+        PrintWriter p = new PrintWriter(w);
+        p.print(e.getClass().getName());
+        if (e.getMessage() != null) {
+            p.print(": " + e.getMessage());
+        }
+        p.println();
+        try {
+            e.printStackTrace(p);
+            return w.toString();
+        } finally {
+            p.close();
+        }
+    }
+
+    /**
+     *
+     * @param msg
+     * @param e
+     * @return string
+     */
+    public static String toString(String msg, Throwable e) {
+        UnsafeStringWriter w = new UnsafeStringWriter();
+        w.write(msg + "\n");
+        PrintWriter p = new PrintWriter(w);
+        try {
+            e.printStackTrace(p);
+            return w.toString();
+        } finally {
+            p.close();
+        }
+    }
+
+    /**
+     * join string.
+     *
+     * @param array String array.
+     * @return String.
+     */
+    public static String join(String[] array)
+    {
+        if( array.length == 0 ) return "";
+        StringBuilder sb = new StringBuilder();
+        for( String s : array )
+            sb.append(s);
+        return sb.toString();
+    }
 }

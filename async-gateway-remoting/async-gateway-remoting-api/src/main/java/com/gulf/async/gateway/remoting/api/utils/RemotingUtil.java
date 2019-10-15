@@ -16,12 +16,17 @@
  */
 package com.gulf.async.gateway.remoting.api.utils;
 
+import com.gulf.async.gateway.common.log.Logger;
+import com.gulf.async.gateway.common.log.LoggerFactory;
 import com.gulf.async.gateway.common.util.StringUtil;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.Objects;
 
 /**
  * Some utilities for remoting.
@@ -30,6 +35,8 @@ import java.net.SocketAddress;
  * @version $Id: RemotingUtil.java, v 0.1 Mar 30, 2016 11:51:02 AM jiangping Exp $
  */
 public class RemotingUtil {
+
+    private final static Logger LOG = LoggerFactory.getInstance(RemotingUtil.class);
 
     /**
      * Parse the remote address of the channel.
@@ -205,5 +212,25 @@ public class RemotingUtil {
             }
             return addr;
         }
+    }
+
+    public static void closeChannel(Channel channel) {
+        final String addrRemote = RemotingUtil.parseRemoteAddress(channel);
+        channel.close().addListener(new ChannelFutureListener() {
+
+            public void operationComplete(ChannelFuture future) throws Exception {
+                LOG.info("closeChannel: close the connection to remote address[{}] result: {}", addrRemote, future.isSuccess());
+            }
+        });
+    }
+
+    /**
+     * IP:PORT
+     */
+    public static SocketAddress string2SocketAddress(final String addr) {
+        Objects.requireNonNull(addr, "socket adress null");
+        String[] s = addr.split(":");
+        InetSocketAddress isa = new InetSocketAddress(s[0], Integer.valueOf(s[1]));
+        return isa;
     }
 }

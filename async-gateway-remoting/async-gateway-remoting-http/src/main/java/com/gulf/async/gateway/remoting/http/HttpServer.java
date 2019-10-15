@@ -14,8 +14,6 @@ import com.gulf.async.gateway.remoting.http.connection.HttpConnectionManager;
 import com.gulf.async.gateway.remoting.http.handler.HttpConnectionHandler;
 import com.gulf.async.gateway.remoting.http.handler.HttpServerHandler;
 import com.gulf.async.gateway.remoting.http.handler.IpFilterHandler;
-import com.gulf.async.gateway.remoting.http.handler.TimeoutHandler;
-import com.gulf.async.gateway.remoting.http.plugins.blacklist.BlackListFilter;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.buffer.UnpooledByteBufAllocator;
@@ -25,8 +23,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
-import io.netty.handler.codec.http.HttpRequestDecoder;
-import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 
 import java.util.concurrent.TimeUnit;
@@ -159,7 +155,7 @@ public class HttpServer extends AbstractRemotingServer {
         try {
             this.channelFuture = serverBootstrap.bind(ip, port).sync();
         } catch (InterruptedException e) {
-            throw new GatewayException("start http server[ip:"+ip+" port:"+port+"]exception");
+            throw new GatewayException("start http server[ip:"+ip+" port:"+port+"] exception");
         }finally {
             super.stop();
         }

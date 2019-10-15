@@ -26,6 +26,7 @@
         <module>async-gateway-remoting-zookeeper</module>
         <module>async-gateway-remoting-http</module>
         <module>async-gateway-remoting-api</module>
+        <module>async-gateway-remoting-dubbo</module>
     </modules>
 
     <dependencies>

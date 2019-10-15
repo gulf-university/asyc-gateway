@@ -27,4 +27,9 @@ public class HttpConnection implements Connection<Channel> {
     public Channel target() {
         return channel;
     }
+
+    @Override
+    public boolean alive() {
+        return channel != null && channel.isActive();
+    }
 }

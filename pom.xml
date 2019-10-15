@@ -25,6 +25,7 @@
     <lombok_version>1.16.4</lombok_version>
     <common-lang3_version>3.7</common-lang3_version>
     <fastjson_version>1.2.47</fastjson_version>
+    <fst_version>2.50</fst_version>
   </properties>
 
   <modules>
@@ -36,6 +37,8 @@
     <module>async-gateway-common</module>
     <module>async-gateway-pipeline</module>
     <module>async-gateway-store</module>
+    <module>async-gateway-spi</module>
+    <module>hessian-lite</module>
   </modules>
 
   <dependencyManagement>
@@ -86,10 +89,17 @@
         <artifactId>fastjson</artifactId>
         <version>${fastjson_version}</version>
       </dependency>
+
+      <dependency>
+        <groupId>de.ruedigermoeller</groupId>
+        <artifactId>fst</artifactId>
+        <version>${fst_version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
     <dependencies>
+
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>

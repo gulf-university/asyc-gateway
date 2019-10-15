@@ -53,12 +53,14 @@ public class NetworkConfigs {
      * 一般对于要建立大量连接的应用, 不建议设置这个值, 因为linux内核对snd_buf的大小是动态调整的, 内核是很聪明的.
      */
     public static final ConfigOption<Integer> SO_SNDBUF = ConfigOption.valueOf("SO_SNDBUF");
+    public static final int SO_SNDBUF_DEFAULT = 65535;
 
     /**
      * 设置rcv_buf
      * 一般对于要建立大量连接的应用, 不建议设置这个值, 因为linux内核对rcv_buf的大小是动态调整的.
      */
     public static final ConfigOption<Integer> SO_RCVBUF = ConfigOption.valueOf("SO_RCVBUF");
+    public static final int SO_RCVBUF_DEFAULT = 65535;
 
     /**
      * SO_LINGER选项用来设置延迟关闭的时间，等待套接字发送缓冲区中的数据发送完成。

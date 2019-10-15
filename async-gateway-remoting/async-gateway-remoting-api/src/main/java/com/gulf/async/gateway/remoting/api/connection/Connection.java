@@ -9,4 +9,6 @@ public interface Connection<T> {
 
     T target();
 
+    boolean alive();
+
 }

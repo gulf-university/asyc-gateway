@@ -11,5 +11,17 @@
 
     <artifactId>async-gateway-pipeline</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.gulf</groupId>
+            <artifactId>async-gateway-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gulf</groupId>
+            <artifactId>async-gateway-remoting-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 
 </project>
