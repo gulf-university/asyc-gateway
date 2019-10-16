@@ -6,7 +6,7 @@ import com.gulf.async.gateway.remoting.dubbo.context.DubboRequest;
 import java.util.concurrent.ConcurrentHashMap;
 
 
-public class RpcRequstCache {
+public class DubboRequstCache {
 
     protected static final ConcurrentHashMap<Long /* opaque */, DubboRequest> rpcRequstTable = new ConcurrentHashMap<Long, DubboRequest>();
 

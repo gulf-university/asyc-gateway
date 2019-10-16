@@ -11,6 +11,8 @@ public class Constants {
 
     public static final String CONTENT_TYPE = "application/json";
 
+    public final static String CONTENT_TYPE_C = "application/json; charset=utf-8";
+
 
     private Constants(){
 

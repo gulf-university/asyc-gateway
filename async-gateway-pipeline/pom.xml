@@ -22,6 +22,16 @@
             <artifactId>async-gateway-remoting-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.gulf</groupId>
+            <artifactId>async-gateway-remoting-http</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gulf</groupId>
+            <artifactId>async-gateway-remoting-dubbo</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

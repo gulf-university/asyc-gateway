@@ -1,4 +1,4 @@
-package com.gulf.async.gateway.spi.invoke;
+package com.gulf.async.gateway.remoting.api.invoke;
 
 /**
  * Created by xubai on 2019/10/15 7:55 PM.

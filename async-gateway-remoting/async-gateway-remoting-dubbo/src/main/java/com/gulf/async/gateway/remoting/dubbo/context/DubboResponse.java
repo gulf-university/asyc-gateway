@@ -2,9 +2,11 @@ package com.gulf.async.gateway.remoting.dubbo.context;
 
 import com.gulf.async.gateway.common.serialize.dubbo.buff.ChannelBuffer;
 import com.gulf.async.gateway.common.util.Bytes;
+import com.gulf.async.gateway.remoting.dubbo.utils.DubboRequstCache;
 import com.gulf.async.gateway.remoting.dubbo.utils.ExchangeCodec;
 import com.gulf.async.gateway.remoting.dubbo.utils.NettyBackedChannelBufferFactory;
-import com.gulf.async.gateway.remoting.dubbo.utils.RpcRequstCache;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.ByteArrayInputStream;
 import java.nio.ByteBuffer;
@@ -12,7 +14,11 @@ import java.nio.ByteBuffer;
 /**
  * Created by xubai on 2019/10/11 6:06 PM.
  */
+@Setter
+@Getter
 public class DubboResponse extends DubboProtocol {
+
+    private String url;
 
 
     public static DubboProtocol decode(final ByteBuffer byteBuffer){
@@ -33,8 +39,7 @@ public class DubboResponse extends DubboProtocol {
         if(readable==19){
             responseCommand=createHeartbeat(DubboProtocol.DubboResponseProcessCode);
         }else {
-            //responseCommand= RpcRequstCache.getRpcRequst( Bytes.bytes2long(header, 4));
-            responseCommand= createResponseCommand(RpcRequstCache.getRpcRequst( Bytes.bytes2long(header, 4)));
+            responseCommand= createResponseCommand(DubboRequstCache.getRpcRequst( Bytes.bytes2long(header, 4)));
         }
 
         responseCommand.setReadable(readable);

@@ -8,6 +8,6 @@ import com.gulf.async.gateway.spi.remoting.Endpoint;
  */
 public interface ServiceCluster {
 
-    Endpoint route(Service serviceInfo);
+    ServiceNode route(Service serviceInfo);
 
 }

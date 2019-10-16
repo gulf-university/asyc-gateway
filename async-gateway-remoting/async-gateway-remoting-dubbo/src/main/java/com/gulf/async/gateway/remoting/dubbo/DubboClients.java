@@ -1,16 +1,16 @@
 package com.gulf.async.gateway.remoting.dubbo;
 
 import com.gulf.async.gateway.common.exception.GatewayException;
+import com.gulf.async.gateway.common.exception.GatewayServiceNotFoundException;
 import com.gulf.async.gateway.common.log.Logger;
 import com.gulf.async.gateway.common.log.LoggerFactory;
 import com.gulf.async.gateway.common.util.SystemPropertyUtil;
-import com.gulf.async.gateway.remoting.api.config.NetworkConfigs;
 import com.gulf.async.gateway.remoting.api.connection.Connection;
 import com.gulf.async.gateway.remoting.api.connection.ConnectionManager;
+import com.gulf.async.gateway.remoting.api.invoke.Invocation;
+import com.gulf.async.gateway.remoting.api.invoke.Invoker;
 import com.gulf.async.gateway.remoting.api.utils.RemotingUtil;
 import com.gulf.async.gateway.remoting.dubbo.connection.DubboConnection;
-import com.gulf.async.gateway.spi.invoke.Invocation;
-import com.gulf.async.gateway.spi.invoke.Invoker;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 
@@ -59,8 +59,15 @@ public class DubboClients implements ConnectionManager<ChannelFuture>, Invoker {
 
     @Override
     public void invoke(Invocation invocation) {
-        //TODO
-
+        String url = invocation.serviceNode().url();
+        DubboConnection connection = null;
+        try {
+            connection = (DubboConnection)get(url);
+        } catch (Exception e) {
+            throw new GatewayServiceNotFoundException("service:"+invocation.service()+" node:"+invocation.serviceNode().url()+" not found");
+        }
+        Channel channel = connection.target().channel();
+        channel.writeAndFlush(invocation.command());
     }
 
     private Connection<ChannelFuture> getOrCreateChannel(final String addr) throws InterruptedException {

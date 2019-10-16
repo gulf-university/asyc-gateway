@@ -22,6 +22,11 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by xubai on 2019/10/11 3:30 PM.
  */
@@ -37,6 +42,10 @@ public class DubboNettyClient extends AbstractRemotingClient<ChannelFuture> {
 
     private ConnectionManager<DubboConnection> connectionManager;
     private DubboConnectionHandler connectionHandler;
+
+    private ThreadPoolExecutor executorService = null;
+
+    private ChannelHandler dubboClientHandler;
 
     public DubboNettyClient(ConnectionManager<DubboConnection> connectionManager) {
         this.connectionManager = connectionManager;
@@ -61,6 +70,20 @@ public class DubboNettyClient extends AbstractRemotingClient<ChannelFuture> {
 
         codec = new DubboCodec();
         connectionHandler = new DubboConnectionHandler(connectionManager);
+
+        int workCount = SystemPropertyUtil.getInt("gateway.dubbo_client_response_pool_count",
+                Math.max(Runtime.getRuntime().availableProcessors() * 2 + 1, 4));
+        int queueSize = SystemPropertyUtil.getInt("gateway.dubbo_client_response_queue_size", 100000);
+        BlockingQueue<Runnable> blockingQueue= new LinkedBlockingQueue<Runnable>(queueSize);
+        executorService=new ThreadPoolExecutor(//
+                workCount,//
+                workCount,//
+                1000 * 60,//
+                TimeUnit.MILLISECONDS,//
+                blockingQueue,//
+                new NamedThreadFactory("gateway-dubbo-response-pool"));
+        dubboClientHandler = new DubboClientHandler(executorService);
+
         this.bootstrap.group(this.dubboIOWorker)
                 .channel(NioSocketChannel.class)//
                 .option(ChannelOption.TCP_NODELAY, config(NetworkConfigs.TCP_NODELAY).get())
@@ -71,12 +94,12 @@ public class DubboNettyClient extends AbstractRemotingClient<ChannelFuture> {
 
                     public void initChannel(SocketChannel ch) throws Exception {
                         ch.pipeline().addLast(//
-                                dubboResponsePool, //
+                                dubboResponsePool, //TODO 写入线程池和读取线程池职责分离
                                 codec.encoder(), //
                                 codec.decoder(), //
                                 new IdleStateHandler(0, 0, SystemPropertyUtil.getInt("gateway.dubbo_client_max_idle_seconds", 120)),//
                                 connectionHandler, //
-                                new DubboClientHandler()
+                                dubboClientHandler
                         );
                     }
                 });
