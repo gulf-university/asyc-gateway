@@ -16,6 +16,7 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.epoll.Epoll;
 import io.netty.channel.epoll.EpollEventLoopGroup;
+import io.netty.channel.epoll.EpollSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -58,14 +59,17 @@ public class DubboNettyClient extends AbstractRemotingClient<ChannelFuture> {
         config(NetworkConfigs.SO_KEEPALIVE).setIfAbsent(NetworkConfigs.TCP_SO_KEEPALIVE_DEFAULT);
         config(NetworkConfigs.SO_SNDBUF).setIfAbsent(NetworkConfigs.SO_SNDBUF_DEFAULT);
         config(NetworkConfigs.SO_RCVBUF).setIfAbsent(NetworkConfigs.SO_RCVBUF_DEFAULT);
+        config(NetworkConfigs.WRITE_BUFFER_HIGH_WATER_MARK).setIfAbsent(NetworkConfigs.NETTY_BUFFER_HIGH_WATERMARK_DEFAULT);
+        config(NetworkConfigs.WRITE_BUFFER_LOW_WATER_MARK).setIfAbsent(NetworkConfigs.NETTY_BUFFER_LOW_WATERMARK_DEFAULT);
+        config(NetworkConfigs.CONNECT_TIMEOUT_MILLIS).setIfAbsent(NetworkConfigs.DEFAULT_CONNECT_TIMEOUT_MILLIS);
 
-        Integer responsePoolSize = SystemPropertyUtil.getInt("gateway.response_pool_size", Math.max(Runtime.getRuntime().availableProcessors() * 2 +1, 4));
+        Integer responsePoolSize = SystemPropertyUtil.getInt("gateway.response_pool_size", Math.max(Runtime.getRuntime().availableProcessors() * 3 +1, 9));
         dubboResponsePool = new DefaultEventExecutorGroup(responsePoolSize, new NamedThreadFactory("gateway-dubbo-response-pool"));
 
         if (config(NetworkConfigs.NETTY_EPOLL_SWITCH).get() && Epoll.isAvailable()){
-            this.dubboIOWorker = new EpollEventLoopGroup(2, new NamedThreadFactory("gateway-dubbo-io-pool"));
+            this.dubboIOWorker = new EpollEventLoopGroup(1, new NamedThreadFactory("gateway-dubbo-io-pool"));
         }else{
-            this.dubboIOWorker = new NioEventLoopGroup(2, new NamedThreadFactory("gateway-dubbo-io-pool"));
+            this.dubboIOWorker = new NioEventLoopGroup(1, new NamedThreadFactory("gateway-dubbo-io-pool"));
         }
 
         codec = new DubboCodec();
@@ -84,12 +88,21 @@ public class DubboNettyClient extends AbstractRemotingClient<ChannelFuture> {
                 new NamedThreadFactory("gateway-dubbo-response-pool"));
         dubboClientHandler = new DubboClientHandler(executorService);
 
+        if (Epoll.isAvailable()){
+            this.bootstrap.channel(EpollSocketChannel.class);
+        }else{
+            this.bootstrap.channel(NioSocketChannel.class);
+        }
+
         this.bootstrap.group(this.dubboIOWorker)
-                .channel(NioSocketChannel.class)//
+                //.channel(NioSocketChannel.class)
                 .option(ChannelOption.TCP_NODELAY, config(NetworkConfigs.TCP_NODELAY).get())
                 .option(ChannelOption.SO_KEEPALIVE, config(NetworkConfigs.SO_KEEPALIVE).get())
                 .option(ChannelOption.SO_SNDBUF, config(NetworkConfigs.SO_SNDBUF).get())
                 .option(ChannelOption.SO_RCVBUF, config(NetworkConfigs.SO_RCVBUF).get())
+                .option(ChannelOption.WRITE_BUFFER_HIGH_WATER_MARK, config(NetworkConfigs.WRITE_BUFFER_HIGH_WATER_MARK).get())
+                .option(ChannelOption.WRITE_BUFFER_LOW_WATER_MARK, config(NetworkConfigs.WRITE_BUFFER_LOW_WATER_MARK).get())
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, config(NetworkConfigs.CONNECT_TIMEOUT_MILLIS).get())
                 .handler(new ChannelInitializer<SocketChannel>() {
 
                     public void initChannel(SocketChannel ch) throws Exception {

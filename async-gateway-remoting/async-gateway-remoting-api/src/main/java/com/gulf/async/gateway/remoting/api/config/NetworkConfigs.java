@@ -1,7 +1,14 @@
 package com.gulf.async.gateway.remoting.api.config;
 
 import com.gulf.async.gateway.common.config.ConfigOption;
+import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.DefaultMessageSizeEstimator;
+import io.netty.channel.MessageSizeEstimator;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,7 +19,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class NetworkConfigs {
 
     /**
-     * 对此连接禁用Nagle算法.
+     *
+     * <p>
+     * 对此连接禁用Nagle算法。立即发送数据，默认值为Ture（Netty默认为True而操作系统默认为False）。该值设置Nagle算法的启用，改算法将小的碎片数据连接成更大的报文来最小化所发送的报文的数量，如果需要发送一些较小的报文，则需要禁用该算法。
+     * Netty默认禁用该算法，从而最小化报文传输延时。
+     * </p>
      */
     public static final ConfigOption<Boolean> TCP_NODELAY = ConfigOption.valueOf("TCP_NODELAY");
     public static final boolean TCP_NODELAY_DEFAULT = true;
@@ -49,15 +60,20 @@ public class NetworkConfigs {
     public static final boolean TCP_SO_REUSEADDR_DEFAULT = true;
 
     /**
-     * 设置snd_buf
-     * 一般对于要建立大量连接的应用, 不建议设置这个值, 因为linux内核对snd_buf的大小是动态调整的, 内核是很聪明的.
+     *
+     * <p>
+     * 设置snd_buf，TCP数据发送缓冲区大小。该缓冲区即TCP发送滑动窗口，linux操作系统可使用命令：cat /proc/sys/net/ipv4/tcp_smem查询其大小。
+     * </p>
      */
     public static final ConfigOption<Integer> SO_SNDBUF = ConfigOption.valueOf("SO_SNDBUF");
     public static final int SO_SNDBUF_DEFAULT = 65535;
 
     /**
-     * 设置rcv_buf
-     * 一般对于要建立大量连接的应用, 不建议设置这个值, 因为linux内核对rcv_buf的大小是动态调整的.
+     *
+     * <p>
+     * 设置rcv_buf,TCP数据接收缓冲区大小。该缓冲区即TCP接收滑动窗口，linux操作系统可使用命令：cat /proc/sys/net/ipv4/tcp_rmem查询其大小。
+     * 一般情况下，该值可由用户在任意时刻设置，但当设置值超过64KB时，需要在连接到远端之前设置。
+     * </p>
      */
     public static final ConfigOption<Integer> SO_RCVBUF = ConfigOption.valueOf("SO_RCVBUF");
     public static final int SO_RCVBUF_DEFAULT = 65535;
@@ -118,18 +134,22 @@ public class NetworkConfigs {
     public static final ConfigOption<Integer> IP_TOS = ConfigOption.valueOf("IP_TOS");
 
     /**
-     * 阻止Netty在SocketChannel.read(..) 返回-1的时候自动关闭连接
+     *
+     * <p>
+     * 阻止Netty在SocketChannel.read(..) 返回-1的时候自动关闭连接。
+     * 一个连接的远端关闭时本地端是否关闭，默认值为False。值为False时，连接自动关闭；为True时，触发ChannelInboundHandler的userEventTriggered()方法，事件为ChannelInputShutdownEvent。
+     * </p>
      */
     public static final ConfigOption<Boolean> ALLOW_HALF_CLOSURE = ConfigOption.valueOf("ALLOW_HALF_CLOSURE");
 
     /**
-     * Netty的选项, write高水位线.
+     * Netty的选项, write高水位线。写高水位标记，默认值64KB。如果Netty的写缓冲区中的字节超过该值，Channel的isWritable()返回False。
      */
     public static final ConfigOption<Integer> WRITE_BUFFER_HIGH_WATER_MARK = ConfigOption.valueOf("WRITE_BUFFER_HIGH_WATER_MARK");
     public static final int NETTY_BUFFER_HIGH_WATERMARK_DEFAULT = 64 * 1024;
 
     /**
-     * Netty的选项, write低水位线.
+     * Netty的选项, write低水位线。写低水位标记，默认值32KB。当Netty的写缓冲区中的字节超过高水位之后若下降到低水位，则Channel的isWritable()返回True。写高低水位标记使用户可以控制写入数据速度，从而实现流量控制。推荐做法是：每次调用channl.write(msg)方法首先调用channel.isWritable()判断是否可写。
      */
     public static final ConfigOption<Integer> WRITE_BUFFER_LOW_WATER_MARK = ConfigOption.valueOf("WRITE_BUFFER_LOW_WATER_MARK");
     public static final int NETTY_BUFFER_LOW_WATERMARK_DEFAULT = 32 * 1024;
@@ -142,11 +162,15 @@ public class NetworkConfigs {
     public static final ConfigOption<Integer> IO_RATIO = ConfigOption.valueOf("IO_RATIO");
     public static final int NETTY_IO_RATIO_DEFAULT = 70;
 
+    /**
+     * 连接超时毫秒数，默认值30000毫秒即30秒
+     */
     public static final ConfigOption<Integer> CONNECT_TIMEOUT_MILLIS = ConfigOption.valueOf("CONNECT_TIMEOUT_MILLIS");
+    public static final int DEFAULT_CONNECT_TIMEOUT_MILLIS = 500;
 
     /** ==== Netty native epoll options ============================================================================ */
 
-    /**
+    /**WRITE_SPIN_COUNT
      * Set the SO_REUSEPORT option on the underlying channel. This will allow to bind multiple
      * epoll socket channels to the same port and so accept connections with multiple threads.
      * <p>
@@ -274,6 +298,92 @@ public class NetworkConfigs {
      * Be aware this config setting can only be adjusted before the channel was registered.
      */
     public static final ConfigOption<Boolean> EDGE_TRIGGERED = ConfigOption.valueOf("EDGE_TRIGGERED");
+
+    /**
+     * Sets the maximum number of messages to read per read loop.
+     * If this value is greater than 1, an event loop might attempt to read multiple times to procure multiple messages.
+     * <p>
+     * 一次Loop读取的最大消息数，对于ServerChannel或者NioByteChannel，默认值为16，其他Channel默认值为1。
+     * 默认值这样设置，是因为：ServerChannel需要接受足够多的连接，保证大吞吐量，NioByteChannel可以减少不必要的系统调用select。
+     * </p>
+     */
+    public static final ConfigOption<Integer> MAX_MESSAGES_PER_READ = ConfigOption.valueOf("MAX_MESSAGES_PER_READ");
+    public static final Integer DEFAULT_MAX_MESSAGES_PER_READ = 16;
+
+    /**
+     *
+     * <p>
+     * 一个Loop写操作执行的最大次数，默认值为16。也就是说，对于大数据量的写操作至多进行16次，如果16次仍没有全部写完数据，此时会提交一个新的写任务给EventLoop，
+     * 任务将在下次调度继续执行。这样，其他的写请求才能被响应不会因为单个大数据量写请求而耽误。
+     * </p>
+     */
+    public static final ConfigOption<Integer> WRITE_SPIN_COUNT = ConfigOption.valueOf("WRITE_SPIN_COUNT");
+    public static final Integer DEFAULT_WRITE_SPIN_COUNT = 10;
+
+
+    /**
+     *
+     * <p>
+     * ByteBuf的分配器，默认值为ByteBufAllocator.DEFAULT，4.0版本为UnpooledByteBufAllocator，
+     * 4.1版本为PooledByteBufAllocator。该值也可以使用系统参数io.netty.allocator.type配置，使用字符串值："unpooled"，"pooled"。
+     * </p>
+     */
+    public static final ConfigOption<ByteBufAllocator> ALLOCATOR = ConfigOption.valueOf("ALLOCATOR");
+    public static final ByteBufAllocator DEFAULT_ALLOCATOR = PooledByteBufAllocator.DEFAULT;
+
+
+    /**
+     *
+     * <p>
+     * 用于Channel分配接受Buffer的分配器，默认值为AdaptiveRecvByteBufAllocator.DEFAULT，是一个自适应的接受缓冲区分配器，能根据接受到的数据自动调节大小。
+     * 可选值为FixedRecvByteBufAllocator，固定大小的接受缓冲区分配器。
+     * </p>
+     */
+    public static final ConfigOption<ByteBufAllocator> RCVBUF_ALLOCATOR = ConfigOption.valueOf("RCVBUF_ALLOCATOR");
+    public static final ByteBufAllocator DEFAULT_RCVBUF_ALLOCATOR = PooledByteBufAllocator.DEFAULT;
+
+    /**
+     *
+     * <p>
+     * 自动读取，默认值为True。Netty只在必要的时候才设置关心相应的I/O事件。对于读操作，需要调用channel.read()设置关心的I/O事件为OP_READ，这样若有数据到达才能读取以供用户处理。
+     * 该值为True时，每次读操作完毕后会自动调用channel.read()，从而有数据到达便能读取；否则，需要用户手动调用channel.read()。
+     * 需要注意的是：当调用config.setAutoRead(boolean)方法时，如果状态由false变为true，将会调用channel.read()方法读取数据；由true变为false，将调用config.autoReadCleared()方法终止数据读取。
+     * </p>
+     */
+    public static final ConfigOption<Boolean> AUTO_READ = ConfigOption.valueOf("AUTO_READ");
+    public static final boolean DEFAULT_AUTO_READ = true;
+
+    /**
+     *
+     * <p>
+     * 消息大小估算器，默认为DefaultMessageSizeEstimator.DEFAULT。估算ByteBuf、ByteBufHolder和FileRegion的大小，其中ByteBuf和ByteBufHolder为实际大小，FileRegion估算值为0。
+     * 该值估算的字节数在计算水位时使用，FileRegion为0可知FileRegion不影响高低水位。
+     * </p>
+     */
+    public static final ConfigOption<MessageSizeEstimator> MESSAGE_SIZE_ESTIMATOR = ConfigOption.valueOf("MESSAGE_SIZE_ESTIMATOR");
+    public static final MessageSizeEstimator DEFAULT_MESSAGE_SIZE_ESTIMATOR = DefaultMessageSizeEstimator.DEFAULT;
+
+    /**
+     *
+     * <p>
+     * 单线程执行ChannelPipeline中的事件，默认值为True。该值控制执行ChannelPipeline中执行ChannelHandler的线程。
+     * 如果为Trye，整个pipeline由一个线程执行，这样不需要进行线程切换以及线程同步，是Netty4的推荐做法；如果为False，ChannelHandler中的处理过程会由Group中的不同线程执行。
+     * </p>
+     */
+    public static final ConfigOption<Boolean> SINGLE_EVENTEXECUTOR_PER_GROUP = ConfigOption.valueOf("SINGLE_EVENTEXECUTOR_PER_GROUP");
+    public static final boolean DEFAULT_SINGLE_EVENTEXECUTOR_PER_GROUP = true;
+
+    /**
+     * udp
+     */
+    public static final ConfigOption<Boolean> SO_BROADCAST = ConfigOption.valueOf("SO_BROADCAST");
+    public static final boolean DEFAULT_SO_BROADCAST = false;
+
+    public static final ConfigOption<InetAddress> IP_MULTICAST_ADDR = ConfigOption.valueOf("IP_MULTICAST_ADDR");
+    public static final ConfigOption<NetworkInterface> IP_MULTICAST_IF = ConfigOption.valueOf("IP_MULTICAST_IF");
+    public static final ConfigOption<Integer> IP_MULTICAST_TTL = ConfigOption.valueOf("IP_MULTICAST_TTL");
+    public static final ConfigOption<Boolean> IP_MULTICAST_LOOP_DISABLED = ConfigOption.valueOf("IP_MULTICAST_LOOP_DISABLED");
+
 
     public static final ConfigOption<Boolean> NETTY_BUFFER_POOLED = ConfigOption.valueOf("gateway.netty_buffer_pooled");
     public static final boolean NETTY_BUFFER_POOLED_DEFAULT = true;

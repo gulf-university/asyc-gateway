@@ -27,6 +27,7 @@ public class DubboClients implements ConnectionManager<ChannelFuture>, Invoker {
 
     private static final long LockTimeoutMillis = 3000;
 
+    //TODO
     private DubboNettyClient dubboNettyClient;
 
     private ConcurrentHashMap<String/*addr*/, DubboConnection> channelTables = new ConcurrentHashMap<String, DubboConnection>();

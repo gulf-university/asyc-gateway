@@ -46,6 +46,9 @@ public class ExchangeCodec {
     public static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
     public static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
 
+    //TODO
+    private static String dubboDetailVersion = "2.5.4";
+
 
     enum DecodeResult {
         NEED_MORE_INPUT, SKIP_SOME_INPUT
@@ -235,12 +238,18 @@ public class ExchangeCodec {
     }
     private static void encodeRequestData(ObjectOutput out, Object data) throws IOException {
         RpcInvocation inv = (RpcInvocation) data;
+        //dubbo version
         out.writeUTF("2.0.0");
         out.writeUTF(inv.getServiceClassName());
+        //service version
         out.writeUTF("1.0.0");
         out.writeUTF(inv.getMethodName());
         //out.writeBytes(inv.getRequestData());
 
+        //dubbox 兼容
+        if (dubboDetailVersion.startsWith("2.8")){
+            out.writeInt(-1);
+        }
         out.writeUTF(ReflectUtils.getDesc(inv.getParameterTypes()));
 
         Object[] args = inv.getArguments();
