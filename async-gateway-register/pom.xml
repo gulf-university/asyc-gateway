@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>async-gateway-register</artifactId>
+    <packaging>pom</packaging>
 
     <name>async-gateway-register</name>
     <!-- FIXME change it to the project's website -->
@@ -24,6 +25,7 @@
     <modules>
         <module>async-gateway-register-zookeeper</module>
         <module>async-gateway-register-consul</module>
+        <module>async-gateway-register-api</module>
     </modules>
 
     <dependencies>

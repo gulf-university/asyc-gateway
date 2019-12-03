@@ -39,6 +39,7 @@
     <module>async-gateway-store</module>
     <module>async-gateway-spi</module>
     <module>hessian-lite</module>
+      <module>async-gateway-plugins</module>
   </modules>
 
   <dependencyManagement>
