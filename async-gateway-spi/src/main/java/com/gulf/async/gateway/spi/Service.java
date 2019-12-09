@@ -7,4 +7,6 @@ public interface Service {
 
     String name();
 
+    String version();
+
 }

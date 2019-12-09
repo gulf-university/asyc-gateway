@@ -1,5 +1,8 @@
 package com.gulf.async.gateway.ha.cluster;
 
+import com.async.gateway.register.api.RegisterFactory;
+import com.async.gateway.register.api.RegisterService;
+import com.gulf.async.gateway.ha.LoadBalance;
 import com.gulf.async.gateway.spi.Service;
 import com.gulf.async.gateway.spi.ha.ServiceCluster;
 import com.gulf.async.gateway.spi.ha.ServiceNode;
@@ -9,8 +12,17 @@ import com.gulf.async.gateway.spi.ha.ServiceNode;
  */
 public class DubboServiceCluster implements ServiceCluster {
 
+
+
+    private RegisterFactory registerFactory;
+
+    public void setRegisterFactory(RegisterFactory registerFactory) {
+        this.registerFactory = registerFactory;
+    }
+
     @Override
     public ServiceNode route(Service serviceInfo) {
-        return null;
+        RegisterService service = registerFactory.getRegisterService(serviceInfo);
+        return service.getRegisterService();
     }
 }

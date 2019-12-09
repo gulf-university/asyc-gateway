@@ -2,13 +2,12 @@ package com.gulf.asyc.gateway.register;
 
 import com.async.gateway.register.api.RegisterService;
 import com.gulf.async.gateway.spi.ha.ServiceNode;
+import com.gulf.async.gateway.spi.ha.ServiceNodes;
 
-import java.util.List;
-
-public class ZookeeperRegistry implements RegisterService{
+public class ZookeeperRegistry extends ServiceNodes implements RegisterService{
 
     @Override
-    public List<ServiceNode> getRegisterService() {
-        return null;
+    public ServiceNode getRegisterService() {
+        return getRandomNode();
     }
 }
