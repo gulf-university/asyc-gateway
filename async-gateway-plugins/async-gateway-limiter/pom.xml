@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>com.gulf</groupId>
-            <artifactId>async-gateway-register-spi</artifactId>
+            <artifactId>async-gateway-register-api</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

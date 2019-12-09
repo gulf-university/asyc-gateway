@@ -26,5 +26,16 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.gulf</groupId>
+            <artifactId>async-gateway-register-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gulf</groupId>
+            <artifactId>async-gateway-remoting-zookeeper</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>
