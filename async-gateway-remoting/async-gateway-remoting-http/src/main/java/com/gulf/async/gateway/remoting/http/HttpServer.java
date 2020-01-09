@@ -5,10 +5,10 @@ import com.gulf.async.gateway.common.log.Logger;
 import com.gulf.async.gateway.common.log.LoggerFactory;
 import com.gulf.async.gateway.common.thread.NamedThreadFactory;
 import com.gulf.async.gateway.common.util.SystemPropertyUtil;
-import com.gulf.async.gateway.remoting.api.Codec;
-import com.gulf.async.gateway.remoting.api.config.NetworkConfigs;
-import com.gulf.async.gateway.remoting.api.connection.ConnectionManager;
-import com.gulf.async.gateway.remoting.api.server.AbstractRemotingServer;
+import com.gulf.async.gateway.remoting.spi.Codec;
+import com.gulf.async.gateway.remoting.spi.config.NetworkConfigs;
+import com.gulf.async.gateway.remoting.spi.connection.ConnectionManager;
+import com.gulf.async.gateway.remoting.spi.server.AbstractRemotingServer;
 import com.gulf.async.gateway.remoting.http.codec.HttpCodec;
 import com.gulf.async.gateway.remoting.http.connection.HttpConnectionManager;
 import com.gulf.async.gateway.remoting.http.handler.HttpConnectionHandler;
@@ -76,11 +76,11 @@ public class HttpServer extends AbstractRemotingServer {
         config(NetworkConfigs.NETTY_EPOLL_LT).setIfAbsent(NetworkConfigs.NETTY_EPOLL_LT_DEFAULT);
         config(NetworkConfigs.HTTP_MAX_REQUEST_CONTENT_LENGTH).setIfAbsent(NetworkConfigs.HTTP_MAX_REQUEST_CONTENT_LENGTH_DEFAULT);
         config(NetworkConfigs.HTTP_MAX_RESPONSE_CONTENT_LENGTH).setIfAbsent(NetworkConfigs.HTTP_MAX_RESPONSE_CONTENT_LENGTH_DEFAULT);
-        config(NetworkConfigs.HTTP_MAX_INITIAL_LINE_LENGTH).set(NetworkConfigs.HTTP_MAX_INITIAL_LINE_LENGTH_DEFAULT);
-        config(NetworkConfigs.HTTP_MAX_HEADER_SIZE).set(NetworkConfigs.HTTP_MAX_HEADER_SIZE_DEFAULT);
-        config(NetworkConfigs.HTTP_MAX_CHUNK_SIZE).set(NetworkConfigs.HTTP_MAX_CHUNK_SIZE_DEFAULT);
-        config(NetworkConfigs.HTTP_VALIDATE_HEADERS).set(NetworkConfigs.HTTP_VALIDATE_HEADERS_DEFAULT);
-        config(NetworkConfigs.HTTP_REQUEST_TIMEOUT_MILLIS).set(NetworkConfigs.HTTP_REQUEST_TIMEOUT_MILLIS_DEFAULT);
+        config(NetworkConfigs.HTTP_MAX_INITIAL_LINE_LENGTH).setIfAbsent(NetworkConfigs.HTTP_MAX_INITIAL_LINE_LENGTH_DEFAULT);
+        config(NetworkConfigs.HTTP_MAX_HEADER_SIZE).setIfAbsent(NetworkConfigs.HTTP_MAX_HEADER_SIZE_DEFAULT);
+        config(NetworkConfigs.HTTP_MAX_CHUNK_SIZE).setIfAbsent(NetworkConfigs.HTTP_MAX_CHUNK_SIZE_DEFAULT);
+        config(NetworkConfigs.HTTP_VALIDATE_HEADERS).setIfAbsent(NetworkConfigs.HTTP_VALIDATE_HEADERS_DEFAULT);
+        config(NetworkConfigs.HTTP_REQUEST_TIMEOUT_MILLIS).setIfAbsent(NetworkConfigs.HTTP_REQUEST_TIMEOUT_MILLIS_DEFAULT);
 
         Integer acceptorSize = SystemPropertyUtil.getInt("gateway.acceptor_pool_size", 1);
         Integer workerSize = SystemPropertyUtil.getInt("gateway.worker_pool_size", Runtime.getRuntime().availableProcessors() * 2);
@@ -153,11 +153,9 @@ public class HttpServer extends AbstractRemotingServer {
     @Override
     protected void startServer() {
         try {
-            this.channelFuture = serverBootstrap.bind(ip, port).sync();
+            this.channelFuture = serverBootstrap.bind(port).sync();
         } catch (InterruptedException e) {
             throw new GatewayException("start http server[ip:"+ip+" port:"+port+"] exception");
-        }finally {
-            super.stop();
         }
     }
 

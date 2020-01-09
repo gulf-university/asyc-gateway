@@ -1,7 +1,7 @@
 package com.gulf.async.gateway.remoting.dubbo.context;
 
 import com.gulf.async.gateway.common.util.SystemPropertyUtil;
-import com.gulf.async.gateway.remoting.api.Protocol;
+import com.gulf.async.gateway.spi.remote.Protocol;
 import io.netty.buffer.ByteBuf;
 
 import java.io.ByteArrayInputStream;

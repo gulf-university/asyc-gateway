@@ -12,7 +12,8 @@ import java.io.UnsupportedEncodingException;
  */
 public class HttpResponse {
 
-    public final static String CONTENT_TYPE = "application/json; charset=utf-8";
+    public final static String CONTENT_TYPE_JSON = "application/json; charset=utf-8";
+    public final static String CONTENT_TYPE_TEXT = "application/text; charset=utf-8";
 
     public HttpResponse(String bodyStr) {
         try {
@@ -41,11 +42,15 @@ public class HttpResponse {
     }
 
     public static FullHttpResponse createFullHttpResponse(HttpResponse httpResponse, HttpResponseStatus status){
+        return createFullHttpResponse(httpResponse, status, CONTENT_TYPE_JSON);
+    }
+
+    public static FullHttpResponse createFullHttpResponse(HttpResponse httpResponse, HttpResponseStatus status, String contentType){
         ByteBuf content = Unpooled.copiedBuffer(httpResponse.getBody());
         int contentLength = httpResponse.getBody().length;
         FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, status, content);
         response.headers().set(HttpHeaderNames.CONTENT_LENGTH, contentLength);
-        response.headers().set(HttpHeaderNames.CONTENT_TYPE, CONTENT_TYPE);
+        response.headers().set(HttpHeaderNames.CONTENT_TYPE, contentType);
         return response;
     }
 }

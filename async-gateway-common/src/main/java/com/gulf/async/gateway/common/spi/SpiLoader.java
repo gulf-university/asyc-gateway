@@ -51,14 +51,14 @@ public class SpiLoader<T> {
     //获取spi loader
     public static <T> SpiLoader<T> getSpiLoader(Class<T> type){
         if (type == null) {
-            throw new IllegalArgumentException("spi type == null");
+            throw new IllegalArgumentException("com.async.gateway.register.spi type == null");
         }
         if (!type.isInterface()) {
-            throw new IllegalArgumentException("spi type(" + type + ") is not interface!");
+            throw new IllegalArgumentException("com.async.gateway.register.spi type(" + type + ") is not interface!");
         }
         // 必须包含 @SPI 注解
         if (!withSpiAnnotation(type)) {
-            throw new IllegalArgumentException("spi type(" + type +
+            throw new IllegalArgumentException("com.async.gateway.register.spi type(" + type +
                     ") is not extension, because WITHOUT @" + SPI.class.getSimpleName() + " Annotation!");
         }
         if (!SPI_LOADERS.containsKey(type)){
@@ -103,7 +103,7 @@ public class SpiLoader<T> {
             List<String> spiClassList = loadSpiClasses();
             createSpiInstance(spiClassList);
         } catch (Exception e) {
-            throw new GatewayException("SpiLoader load spi:"+type.getName()+" instance exception", e);
+            throw new GatewayException("SpiLoader load com.async.gateway.register.spi:"+type.getName()+" instance exception", e);
         }
     }
 
@@ -136,7 +136,7 @@ public class SpiLoader<T> {
                 }
             }
         } catch (Exception e) {
-            throw new GatewayException("SpiLoader load spi:"+type.getName()+" extensions exception");
+            throw new GatewayException("SpiLoader load com.async.gateway.register.spi:"+type.getName()+" extensions exception");
         }
         return classList;
     }
@@ -200,7 +200,7 @@ public class SpiLoader<T> {
         for (int i = Character.charCount(cp); i < line.length(); i += Character.charCount(cp)) {
             cp = line.codePointAt(i);
             if (!Character.isJavaIdentifierPart(cp) && (cp != '.')) {
-                throw new GatewayException("parse line:"+indexNumber+" spi class contains no java identifer.");
+                throw new GatewayException("parse line:"+indexNumber+" com.async.gateway.register.spi class contains no java identifer.");
             }
         }
         return line;

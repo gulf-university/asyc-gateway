@@ -7,7 +7,7 @@ public class Constants {
 
     public final static String UTF_8 = "UTF-8";
 
-    public final static String GATEWAY_URI = "/api/";
+    public final static String GATEWAY_URI = "/api";
 
     public static final String CONTENT_TYPE = "application/json";
 

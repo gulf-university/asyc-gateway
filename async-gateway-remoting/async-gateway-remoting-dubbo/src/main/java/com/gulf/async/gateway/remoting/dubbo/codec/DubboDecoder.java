@@ -3,7 +3,7 @@ package com.gulf.async.gateway.remoting.dubbo.codec;
 import com.gulf.async.gateway.common.log.Logger;
 import com.gulf.async.gateway.common.log.LoggerFactory;
 import com.gulf.async.gateway.common.util.SystemPropertyUtil;
-import com.gulf.async.gateway.remoting.api.utils.RemotingUtil;
+import com.gulf.async.gateway.remoting.spi.utils.RemotingUtil;
 import com.gulf.async.gateway.remoting.dubbo.context.DubboResponse;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelFuture;

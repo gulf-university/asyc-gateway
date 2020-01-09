@@ -26,10 +26,10 @@
     <common-lang3_version>3.7</common-lang3_version>
     <fastjson_version>1.2.47</fastjson_version>
     <fst_version>2.50</fst_version>
+    <logback_version>1.1.11</logback_version>
   </properties>
 
   <modules>
-    <module>async-gateway-api</module>
     <module>async-gateway-server</module>
     <module>async-gateway-ha</module>
     <module>async-gateway-remoting</module>
@@ -71,6 +71,17 @@
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-api</artifactId>
         <version>${log4j_version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${logback_version}</version>
+      </dependency>
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-core</artifactId>
+        <version>${logback_version}</version>
       </dependency>
 
       <dependency>

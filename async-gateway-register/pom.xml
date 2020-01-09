@@ -25,13 +25,19 @@
     <modules>
         <module>async-gateway-register-zookeeper</module>
         <module>async-gateway-register-consul</module>
-        <module>async-gateway-register-api</module>
+        <module>async-gateway-register-spi</module>
     </modules>
 
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.gulf</groupId>
+            <artifactId>async-gateway-spi</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

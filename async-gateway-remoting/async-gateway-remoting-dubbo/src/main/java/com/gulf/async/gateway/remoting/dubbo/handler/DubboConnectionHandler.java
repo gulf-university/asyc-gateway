@@ -2,8 +2,8 @@ package com.gulf.async.gateway.remoting.dubbo.handler;
 
 import com.gulf.async.gateway.common.log.Logger;
 import com.gulf.async.gateway.common.log.LoggerFactory;
-import com.gulf.async.gateway.remoting.api.connection.ConnectionManager;
-import com.gulf.async.gateway.remoting.api.utils.RemotingUtil;
+import com.gulf.async.gateway.remoting.spi.connection.ConnectionManager;
+import com.gulf.async.gateway.remoting.spi.utils.RemotingUtil;
 import com.gulf.async.gateway.remoting.dubbo.connection.DubboConnection;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;

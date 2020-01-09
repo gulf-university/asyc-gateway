@@ -2,12 +2,11 @@ package com.gulf.async.gateway.remoting.dubbo;
 
 import com.gulf.async.gateway.common.thread.NamedThreadFactory;
 import com.gulf.async.gateway.common.util.SystemPropertyUtil;
-import com.gulf.async.gateway.remoting.api.Codec;
-import com.gulf.async.gateway.remoting.api.client.AbstractRemotingClient;
-import com.gulf.async.gateway.remoting.api.config.NetworkConfigs;
-import com.gulf.async.gateway.remoting.api.connection.ConnectionManager;
-import com.gulf.async.gateway.remoting.api.context.RemotingContext;
-import com.gulf.async.gateway.remoting.api.utils.RemotingUtil;
+import com.gulf.async.gateway.remoting.spi.Codec;
+import com.gulf.async.gateway.remoting.spi.client.AbstractRemotingClient;
+import com.gulf.async.gateway.remoting.spi.config.NetworkConfigs;
+import com.gulf.async.gateway.remoting.spi.connection.ConnectionManager;
+import com.gulf.async.gateway.remoting.spi.utils.RemotingUtil;
 import com.gulf.async.gateway.remoting.dubbo.codec.DubboCodec;
 import com.gulf.async.gateway.remoting.dubbo.connection.DubboConnection;
 import com.gulf.async.gateway.remoting.dubbo.handler.DubboClientHandler;

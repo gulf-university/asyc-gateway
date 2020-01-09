@@ -1,6 +1,6 @@
 package com.gulf.async.gateway.remoting.http.codec;
 
-import com.gulf.async.gateway.remoting.api.Codec;
+import com.gulf.async.gateway.remoting.spi.Codec;
 import io.netty.channel.ChannelHandler;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;

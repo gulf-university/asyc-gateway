@@ -1,6 +1,6 @@
 package com.gulf.asyc.gateway.register;
 
-import com.async.gateway.register.api.RegisterService;
+import com.async.gateway.register.spi.RegisterService;
 import com.gulf.async.gateway.spi.ha.ServiceNode;
 import com.gulf.async.gateway.spi.ha.ServiceNodes;
 

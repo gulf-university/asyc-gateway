@@ -3,9 +3,9 @@ package com.gulf.async.gateway.remoting.http.connection;
 import com.gulf.async.gateway.common.log.Logger;
 import com.gulf.async.gateway.common.log.LoggerFactory;
 import com.gulf.async.gateway.common.thread.NamedThreadFactory;
-import com.gulf.async.gateway.remoting.api.connection.Connection;
-import com.gulf.async.gateway.remoting.api.connection.ConnectionManager;
-import com.gulf.async.gateway.remoting.api.utils.RemotingUtil;
+import com.gulf.async.gateway.remoting.spi.connection.Connection;
+import com.gulf.async.gateway.remoting.spi.connection.ConnectionManager;
+import com.gulf.async.gateway.remoting.spi.utils.RemotingUtil;
 import com.gulf.async.gateway.remoting.http.HttpResponse;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
@@ -55,6 +55,9 @@ public class HttpConnectionManager implements ConnectionManager<Channel> {
     @Override
     public void remove(String id) {
         Connection<Channel> connection = connections.remove(id);
+        if (connection == null){
+            return;
+        }
         Channel channel = connection.target();
         try {
             if (channel.isActive() && channel.isOpen()){

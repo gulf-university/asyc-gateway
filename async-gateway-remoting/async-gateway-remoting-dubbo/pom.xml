@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>com.gulf</groupId>
-            <artifactId>async-gateway-remoting-api</artifactId>
+            <artifactId>async-gateway-remoting-spi</artifactId>
             <version>${project.version}</version>
         </dependency>
 

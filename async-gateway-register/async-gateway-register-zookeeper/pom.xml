@@ -29,7 +29,7 @@
 
         <dependency>
             <groupId>com.gulf</groupId>
-            <artifactId>async-gateway-register-api</artifactId>
+            <artifactId>async-gateway-register-spi</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

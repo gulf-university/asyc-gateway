@@ -2,11 +2,15 @@ package com.gulf.async.gateway.common.util;
 
 import com.google.common.base.Strings;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * Created by xubai on 2019/07/29 3:40 PM.
@@ -159,5 +163,106 @@ public final class ClassUtil {
             classPath = System.getProperty("user.dir");
         }
         return classPath;
+    }
+
+    public static List<Class<?>> getClassByInterface(Class<?> interfaceClass){
+        return getClassByInterface(interfaceClass.getPackage().getName(), interfaceClass);
+    }
+
+    public static List<Class<?>> getClassByInterface(String packageName, Class<?> interfaceClass){
+        ArrayList list = new ArrayList();
+        if (interfaceClass.isInterface()){
+            List<Class<?>> allClass = getClass(packageName);
+            for (int i = 0; i < allClass.size(); i++) {
+                if (interfaceClass.isAssignableFrom(allClass.get(i))) {
+                    if (!interfaceClass.equals(allClass.get(i))) {//自身并不加进去
+                        list.add(allClass.get(i));
+                    }
+                }
+            }
+        }
+        return list;
+    }
+
+    public static List<Class<?>> getClass(String packageName) {
+        String path = packageName.replaceAll("\\.", "/");
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        ArrayList<Class<?>> classes = new ArrayList<>();
+        try {
+            Enumeration<URL> enumeration = classLoader.getResources(path);
+            while (enumeration.hasMoreElements()){
+                URL url = enumeration.nextElement();
+                String protocol = url.getProtocol();
+                if ("jar".equals(protocol)){
+                    String jarpath = url.getPath();
+                    jarpath = jarpath.replace("file:/", "");
+                    jarpath = jarpath.substring(0, jarpath.indexOf("!"));
+                    classes.addAll(getClasssFromJarFile(jarpath, path));
+                }else if ("file".equals(protocol)){
+                    File file = new File(url.getFile());
+                    classes.addAll(findClass(file, packageName));
+                }
+            }
+        } catch (Exception e) {
+            //TODO
+        }
+        return classes;
+    }
+
+    public static List<Class<?>> findClass(File file, String packageName){
+        ArrayList<Class<?>> classes = new ArrayList<>();
+        if (file == null || !file.exists()){
+            return classes;
+        }
+        File[] files = file.listFiles();
+        for (File f : files){
+            if (f.isDirectory()){
+                classes.addAll(findClass(f, packageName+"."+f.getName()));
+            }else if (f.getName().endsWith(".class")){
+                try {
+                    classes.add(Class.forName(packageName+"."+f.getName().substring(0, f.getName().indexOf(".class"))));
+                } catch (ClassNotFoundException e) {
+                    //NOOP
+                }
+            }
+        }
+        return classes;
+    }
+
+    public static List<Class<?>> getClasssFromJarFile(String jarpath, String path){
+        ArrayList<Class<?>> classes = new ArrayList<>();
+        JarFile jarFile = null;
+        try{
+            jarFile = new JarFile(jarpath);
+            List<JarEntry> jarEntries = new ArrayList<>();
+            Enumeration<JarEntry> enumeration = jarFile.entries();
+            while (enumeration.hasMoreElements()){
+                JarEntry entry = enumeration.nextElement();
+                if (!entry.isDirectory()
+                        && entry.getName().startsWith(path) && entry.getName().endsWith(".class")){
+                    jarEntries.add(entry);
+                }
+            }
+            for (JarEntry entry : jarEntries){
+                String className = entry.getName().replaceAll("/", ".");
+                className = className.substring(0, className.indexOf(".class"));
+                try {
+                    classes.add(Thread.currentThread().getContextClassLoader().loadClass(className));
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }catch (Exception e){
+
+        }finally {
+            if (jarFile != null){
+                try {
+                    jarFile.close();
+                } catch (IOException e) {
+                    //NOOP
+                }
+            }
+        }
+        return classes;
     }
 }

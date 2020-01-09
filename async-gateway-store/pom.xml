@@ -12,7 +12,8 @@
     <artifactId>async-gateway-store</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>async-gateway-store-api</module>
+        <module>async-gateway-store-spi</module>
+        <module>async-gateway-store-redis</module>
     </modules>
 
     <dependencies>

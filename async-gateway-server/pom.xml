@@ -23,6 +23,37 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.gulf</groupId>
+            <artifactId>async-gateway-remoting-spi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gulf</groupId>
+            <artifactId>async-gateway-remoting-http</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gulf</groupId>
+            <artifactId>async-gateway-register-spi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gulf</groupId>
+            <artifactId>async-gateway-store-spi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gulf</groupId>
+            <artifactId>async-gateway-store-redis</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gulf</groupId>
+            <artifactId>async-gateway-pipeline</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>

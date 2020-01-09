@@ -1,6 +1,6 @@
 package com.gulf.async.gateway.remoting.http.connection;
 
-import com.gulf.async.gateway.remoting.api.connection.Connection;
+import com.gulf.async.gateway.remoting.spi.connection.Connection;
 import io.netty.channel.Channel;
 
 /**

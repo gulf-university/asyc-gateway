@@ -3,8 +3,9 @@ package com.gulf.async.gateway.remoting.http.handler;
 import com.gulf.async.gateway.common.log.Logger;
 import com.gulf.async.gateway.common.log.LoggerFactory;
 import com.gulf.async.gateway.common.spi.SpiLoader;
-import com.gulf.async.gateway.store.api.BlackListStore;
-import com.gulf.async.gateway.store.api.entity.BlackListEntity;
+import com.gulf.async.gateway.store.spi.BlackListStore;
+import com.gulf.async.gateway.store.spi.entity.BlackListEntity;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.ipfilter.AbstractRemoteAddressFilter;
 import io.netty.handler.ipfilter.IpFilterRule;
@@ -19,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by xubai on 2019/09/25 3:45 PM.
  */
+@ChannelHandler.Sharable
 public class IpFilterHandler extends AbstractRemoteAddressFilter<InetSocketAddress> implements BlackListFilter {
 
     private final static Logger LOG = LoggerFactory.getInstance(IpFilterHandler.class);
@@ -31,12 +33,17 @@ public class IpFilterHandler extends AbstractRemoteAddressFilter<InetSocketAddre
     private BlackListStore blackListStore;
 
     public IpFilterHandler() {
-        blackListStore = (BlackListStore)SpiLoader.getSpiLoader(BlackListStore.class).getAdativateSpi("blackListStore", "cassandra");
+        blackListStore = (BlackListStore)SpiLoader.getSpiLoader(BlackListStore.class).getAdativateSpi("blackListStore", "redis").get(0);
     }
 
     @Override
     protected boolean accept(ChannelHandlerContext ctx, InetSocketAddress remoteAddress) throws Exception {
-        return false;
+        for (IpFilterRule rule : blackList.values()) {
+            if (rule.matches(remoteAddress) && rule.ruleType() == IpFilterRuleType.REJECT) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

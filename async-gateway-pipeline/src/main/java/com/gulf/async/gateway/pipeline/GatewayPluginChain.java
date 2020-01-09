@@ -2,9 +2,9 @@ package com.gulf.async.gateway.pipeline;
 
 import com.gulf.async.gateway.common.spi.SpiLoader;
 import com.gulf.async.gateway.common.util.CollectionUtil;
-import com.gulf.async.gateway.remoting.api.context.RemotingContext;
+import com.gulf.async.gateway.spi.remote.RemotingContext;
+import com.gulf.async.gateway.spi.pipeline.GatewayPlugin;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 

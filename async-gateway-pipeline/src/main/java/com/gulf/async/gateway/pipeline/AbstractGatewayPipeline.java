@@ -1,13 +1,8 @@
 package com.gulf.async.gateway.pipeline;
 
-import com.gulf.async.gateway.common.log.Logger;
-import com.gulf.async.gateway.common.log.LoggerFactory;
-import com.gulf.async.gateway.common.spi.Activate;
-import com.gulf.async.gateway.common.spi.SpiLoader;
-import com.gulf.async.gateway.remoting.api.context.RemotingContext;
+import com.gulf.async.gateway.spi.remote.RemotingContext;
+import com.gulf.async.gateway.spi.pipeline.GatewayPipeline;
 
-import java.util.Comparator;
-import java.util.List;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**

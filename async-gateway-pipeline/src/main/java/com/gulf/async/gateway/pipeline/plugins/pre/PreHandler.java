@@ -4,8 +4,8 @@ import com.gulf.async.gateway.common.log.Logger;
 import com.gulf.async.gateway.common.log.LoggerFactory;
 import com.gulf.async.gateway.common.spi.Activate;
 import com.gulf.async.gateway.pipeline.AbstractGatewayPlugin;
-import com.gulf.async.gateway.pipeline.GatewayPlugin;
-import com.gulf.async.gateway.remoting.api.context.RemotingContext;
+import com.gulf.async.gateway.spi.pipeline.GatewayPlugin;
+import com.gulf.async.gateway.spi.remote.RemotingContext;
 
 /**
  * Created by xubai on 2019/10/11 11:52 AM.

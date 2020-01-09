@@ -1,6 +1,7 @@
 package com.gulf.async.gateway.pipeline;
 
-import com.gulf.async.gateway.remoting.api.context.RemotingContext;
+import com.gulf.async.gateway.spi.remote.RemotingContext;
+import com.gulf.async.gateway.spi.pipeline.GatewayPlugin;
 
 /**
  * Created by xubai on 2019/10/11 11:52 AM.

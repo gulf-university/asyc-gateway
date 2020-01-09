@@ -1,6 +1,6 @@
 package com.gulf.async.gateway.remoting.dubbo.codec;
 
-import com.gulf.async.gateway.remoting.api.Codec;
+import com.gulf.async.gateway.remoting.spi.Codec;
 import io.netty.channel.ChannelHandler;
 
 /**

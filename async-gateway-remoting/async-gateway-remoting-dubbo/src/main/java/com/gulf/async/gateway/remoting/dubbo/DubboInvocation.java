@@ -1,9 +1,8 @@
 package com.gulf.async.gateway.remoting.dubbo;
 
-import com.gulf.async.gateway.remoting.api.Protocol;
-import com.gulf.async.gateway.remoting.api.context.RemotingContext;
-import com.gulf.async.gateway.remoting.api.context.RemotingRequest;
-import com.gulf.async.gateway.remoting.api.invoke.Invocation;
+import com.gulf.async.gateway.spi.remote.Protocol;
+import com.gulf.async.gateway.spi.remote.RemotingRequest;
+import com.gulf.async.gateway.remoting.spi.invoke.Invocation;
 import com.gulf.async.gateway.remoting.dubbo.context.DubboRequest;
 import com.gulf.async.gateway.remoting.dubbo.context.DubboResponse;
 import com.gulf.async.gateway.remoting.dubbo.utils.DubboRequstCache;
@@ -33,8 +32,8 @@ public class DubboInvocation implements Invocation {
     public DubboInvocation(Service service, ServiceNode serviceNode, RemotingRequest request) {
         this.service = service;
         this.serviceNode = serviceNode;
-        this.buildCommand();
         this.source = request;
+        this.buildCommand();
     }
 
     private void buildCommand(){

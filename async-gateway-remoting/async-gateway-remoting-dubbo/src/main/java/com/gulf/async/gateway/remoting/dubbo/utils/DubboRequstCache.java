@@ -19,7 +19,7 @@ public class DubboRequstCache {
         return remotingCommand;
     }
 
-    //todo:增加定时扫描器清除过时请求
+    //TODO:增加定时扫描器清除过时请求
     public static void removeRpcRequst(long opaque){
         rpcRequstTable.remove(opaque);
     }

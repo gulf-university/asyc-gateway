@@ -2,10 +2,9 @@ package com.gulf.async.gateway.remoting.http.handler;
 
 import com.gulf.async.gateway.common.log.Logger;
 import com.gulf.async.gateway.common.log.LoggerFactory;
-import com.gulf.async.gateway.remoting.api.connection.ConnectionManager;
-import com.gulf.async.gateway.remoting.api.utils.RemotingUtil;
+import com.gulf.async.gateway.remoting.spi.connection.ConnectionManager;
+import com.gulf.async.gateway.remoting.spi.utils.RemotingUtil;
 import com.gulf.async.gateway.remoting.http.connection.HttpConnection;
-import com.gulf.async.gateway.remoting.http.connection.HttpConnectionManager;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandler;
@@ -60,5 +59,12 @@ public class HttpConnectionHandler extends ChannelDuplexHandler {
         Channel channel = ctx.channel();
         httpConnectionManager.remove(channel.id().asLongText());
         super.channelInactive(ctx);
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        Channel channel = ctx.channel();
+        httpConnectionManager.remove(channel.id().asLongText());
+        super.exceptionCaught(ctx, cause);
     }
 }

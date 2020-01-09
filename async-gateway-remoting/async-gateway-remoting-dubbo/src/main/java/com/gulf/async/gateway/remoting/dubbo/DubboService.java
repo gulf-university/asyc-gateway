@@ -59,4 +59,9 @@ public class DubboService implements Service {
         this.version = version;
         return this;
     }
+
+    @Override
+    public String version() {
+        return version;
+    }
 }

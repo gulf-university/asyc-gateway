@@ -1,8 +1,7 @@
 package com.gulf.async.gateway.ha.cluster;
 
-import com.async.gateway.register.api.RegisterFactory;
-import com.async.gateway.register.api.RegisterService;
-import com.gulf.async.gateway.ha.LoadBalance;
+import com.async.gateway.register.spi.RegisterFactory;
+import com.async.gateway.register.spi.RegisterService;
 import com.gulf.async.gateway.spi.Service;
 import com.gulf.async.gateway.spi.ha.ServiceCluster;
 import com.gulf.async.gateway.spi.ha.ServiceNode;

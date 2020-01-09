@@ -1,6 +1,5 @@
 package com.gulf.async.gateway.remoting.dubbo.context;
 
-import com.gulf.async.gateway.remoting.api.context.RemotingRequest;
 import lombok.Getter;
 import lombok.Setter;
 

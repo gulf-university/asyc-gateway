@@ -1,8 +1,10 @@
 package com.gulf.async.gateway.plugin;
 
-import com.async.gateway.register.api.RegistryListener;
+import com.async.gateway.register.spi.RegistryListener;
+import com.gulf.async.gateway.common.log.Logger;
+import com.gulf.async.gateway.common.log.LoggerFactory;
 import com.gulf.async.gateway.pipeline.AbstractGatewayPlugin;
-import com.gulf.async.gateway.remoting.api.context.RemotingContext;
+import com.gulf.async.gateway.spi.remote.RemotingContext;
 import com.gulf.async.gateway.spi.Service;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,8 +16,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by xubai on 2019/12/03 11:06 AM.
  */
-@Slf4j
 public class ServiceRequestLimiter extends AbstractGatewayPlugin implements RegistryListener {
+
+    private final static Logger LOG = LoggerFactory.getInstance(ServiceRequestLimiter.class);
 
     private final static int DEFAULT_SERVICE_CONCURRENCY = 300;
     private final static int DEFAULT_SHARED_CONCURRENCY = 10000;
@@ -34,7 +37,7 @@ public class ServiceRequestLimiter extends AbstractGatewayPlugin implements Regi
             accquired = sp.tryAcquire(3000L, TimeUnit.MILLISECONDS);
             super.pre(context);
         }catch (Exception e){
-            log.warn("service:{} acquire semaphore fail, current concurrency:{}", context.request().id(), concurrency - sp.availablePermits());
+            LOG.warn("service:{} acquire semaphore fail, current concurrency:{}", context.request().id(), concurrency - sp.availablePermits());
         }finally {
             if (accquired){
                 sp.release();

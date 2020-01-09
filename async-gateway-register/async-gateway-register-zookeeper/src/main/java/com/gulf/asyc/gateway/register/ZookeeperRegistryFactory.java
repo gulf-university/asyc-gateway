@@ -1,7 +1,7 @@
 package com.gulf.asyc.gateway.register;
 
-import com.async.gateway.register.api.RegisterFactory;
-import com.async.gateway.register.api.RegisterService;
+import com.async.gateway.register.spi.RegisterFactory;
+import com.async.gateway.register.spi.RegisterService;
 import com.gulf.asyc.gateway.remoting.zookeeper.ZookeeperTransporter;
 import com.gulf.async.gateway.spi.Service;
 

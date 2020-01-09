@@ -4,12 +4,13 @@ import com.gulf.async.gateway.common.exception.GatewayException;
 import com.gulf.async.gateway.common.exception.GatewayServiceNotFoundException;
 import com.gulf.async.gateway.common.log.Logger;
 import com.gulf.async.gateway.common.log.LoggerFactory;
+import com.gulf.async.gateway.common.spi.Activate;
 import com.gulf.async.gateway.common.util.SystemPropertyUtil;
-import com.gulf.async.gateway.remoting.api.connection.Connection;
-import com.gulf.async.gateway.remoting.api.connection.ConnectionManager;
-import com.gulf.async.gateway.remoting.api.invoke.Invocation;
-import com.gulf.async.gateway.remoting.api.invoke.Invoker;
-import com.gulf.async.gateway.remoting.api.utils.RemotingUtil;
+import com.gulf.async.gateway.remoting.spi.connection.Connection;
+import com.gulf.async.gateway.remoting.spi.connection.ConnectionManager;
+import com.gulf.async.gateway.remoting.spi.invoke.Invocation;
+import com.gulf.async.gateway.remoting.spi.invoke.Invoker;
+import com.gulf.async.gateway.remoting.spi.utils.RemotingUtil;
 import com.gulf.async.gateway.remoting.dubbo.connection.DubboConnection;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -21,6 +22,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Created by xubai on 2019/10/15 3:32 PM.
  */
+@Activate(group={"invoker"}, tag = {"dubbo"})
 public class DubboClients implements ConnectionManager<ChannelFuture>, Invoker {
 
     private final static Logger LOG = LoggerFactory.getInstance(DubboClients.class);
