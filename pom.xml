@@ -26,7 +26,7 @@
     <common-lang3_version>3.7</common-lang3_version>
     <fastjson_version>1.2.47</fastjson_version>
     <fst_version>2.50</fst_version>
-    <logback_version>1.1.11</logback_version>
+    <logback_version>1.2.0</logback_version>
   </properties>
 
   <modules>
